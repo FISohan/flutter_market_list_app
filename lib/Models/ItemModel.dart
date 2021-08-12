@@ -29,7 +29,7 @@ class ItemModel {
     _map['id'] = id;
     _map['groupId'] = groupId;
     _map['isDone'] = isDone;
-    _map['amountPerItem'] = itemQuantity;
+    _map['amountPerItem'] = amountPerItem;
     _map['itemName'] = itemName;
     _map['itemQuantity'] = itemQuantity;
     return _map;

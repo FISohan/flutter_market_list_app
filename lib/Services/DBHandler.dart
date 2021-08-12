@@ -3,7 +3,7 @@ import 'package:get/get.dart';
 import 'package:sqflite/sqflite.dart';
 import 'package:path/path.dart';
 
-class DbHandler extends GetxController {
+class DbHandler {
   //initialize DataBase
   Future<Database> initDB() async {
     String path = await getDatabasesPath();
@@ -11,22 +11,23 @@ class DbHandler extends GetxController {
       join(path, 'marketList.db'),
       onCreate: (database, version) async {
         await database.execute(
-            "CREATE TABLE marketList(id INTEGER PRIMARY KEY AUTOINCREMENT, isDone INTEGER NOT NULL,groupId INTEGER NOT NULL,itemName TEXT NOT NULL, itemQuantity TEXT NOT NULL, amountOfPerItem INTEGER NOT NULL)");
+            "CREATE TABLE marketList(id INTEGER PRIMARY KEY AUTOINCREMENT, groupId INTEGER NOT NULL,isDone INTEGER NOT NULL, amountPerItem INTEGER NOT NULL, itemName TEXT NOT NULL, itemQuantity TEXT NOT NULL)");
       },
       version: 1,
     );
   }
 
-  Future<List<ItemModel>> getList() async {
+  Future<List<ItemModel>> getData() async {
     Database db = await initDB();
-    final List<Map<String, Object?>> queryResult = await db.query('bazarlist');
+    final List<Map<String, Object?>> queryResult = await db.query('marketList');
     return queryResult.map((e) => ItemModel.fromMap(e)).toList();
   }
 
   Future<int> insertList(ItemModel list) async {
     Database db = await initDB();
+    print('map>>${list.toMap()}');
     int res = 0;
-    res = await db.insert('bazarlist', list.toMap(),
+    res = await db.insert('marketList', list.toMap(),
         conflictAlgorithm: ConflictAlgorithm.replace);
     return res;
   }
@@ -34,7 +35,7 @@ class DbHandler extends GetxController {
   Future<void> deleteList(int id) async {
     final db = await initDB();
     await db.delete(
-      'bazarlist',
+      'marketList',
       where: "id = ?",
       whereArgs: [id],
     );
@@ -42,7 +43,7 @@ class DbHandler extends GetxController {
 
   Future<void> updateList(ItemModel updatedList) async {
     final db = await initDB();
-    await db.update('bazarlist', updatedList.toMap(),
+    await db.update('marketList', updatedList.toMap(),
         where: "id = ?", whereArgs: [updatedList.id]);
   }
 }
