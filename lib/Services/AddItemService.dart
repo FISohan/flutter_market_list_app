@@ -11,7 +11,7 @@ class AddItemService extends GetxController {
   List<ItemModel> itemsFromDB = [];
 
   int id = 0;
-  int groupId = 0;
+  int groupId = 1;
   int isDone = 0;
   int amountPerItem = 0;
   String itemName = '';
@@ -19,9 +19,12 @@ class AddItemService extends GetxController {
 
   Future<void>getItemsFromDB()async{
     itemsFromDB = await _dbHandler.getData();
+    itemsFromDB.sort((a,b)=>a.groupId.compareTo(b.groupId));
   }
 
   void addItem() {
+    id++;
+    groupId = _maxGroupIdFromDB() + 1;
     ItemModel _item = ItemModel(
         id: id,
         groupId: groupId,
@@ -31,11 +34,28 @@ class AddItemService extends GetxController {
         itemQuantity: itemQuantity);
     items.add(_item);
   }
+  int _maxGroupIdFromDB(){
+    if(itemsFromDB.length != 0){
+      print('${itemsFromDB.last.id}');
+      return itemsFromDB.last.groupId;
+    }else{
+      return 0;
+    }
+  }
+
+  Future<void>saveItemsToDB()async{
+    for(ItemModel item in items){
+      await _dbHandler.insertData(item);
+      print(_dbHandler.insertData(item));
+    }
+  }
 
   @override
   void onInit() async{
     // TODO: implement onInit
     super.onInit();
     await getItemsFromDB();
+    id = (itemsFromDB.length != 0) ? itemsFromDB.last.id : 0;
+
   }
 }

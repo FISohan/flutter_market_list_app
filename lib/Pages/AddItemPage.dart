@@ -8,10 +8,10 @@ class AddItemPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final _formKey = GlobalKey<FormState>();
-    return Scaffold(
-      body: GetX<AddItemService>(
-        init: AddItemService(),
-        builder: (c) => ListView(
+    return GetX<AddItemService>(
+      init: AddItemService(),
+        builder:(c)=> Scaffold(
+      body: ListView(
           physics: AlwaysScrollableScrollPhysics(),
           children: [
             ListView.builder(
@@ -24,8 +24,10 @@ class AddItemPage extends StatelessWidget {
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceAround,
                       children: [
+                        Text('${i + 1}'),
                         Text('${c.items[i].itemName}'),
-                        Text('${c.items[i].itemQuantity}')
+                        Text('${c.items[i].itemQuantity}'),
+                        IconButton(onPressed: (){}, icon: Icon(Icons.clear),color: Colors.red,)
                       ],
                     ),
                   );
@@ -47,7 +49,7 @@ class AddItemPage extends StatelessWidget {
                             return null;
                           },
                           onSaved: (value) {
-                           // c.itemName = value.toString();
+                            c.itemName = value.toString();
                           },
                           decoration: _inputDecoration('Item Name'),
                         )),
@@ -62,7 +64,7 @@ class AddItemPage extends StatelessWidget {
                             return null;
                           },
                           onSaved: (v) {
-                         //   c.itemQuantity = v.toString();
+                            c.itemQuantity = v.toString();
                           },
                           decoration: _inputDecoration('Item Quantity'),
                         ))
@@ -91,11 +93,17 @@ class AddItemPage extends StatelessWidget {
             )
           ],
         ),
-      ),
+
       appBar: AppBar(
         title: Text('add'),
+        actions: [
+          IconButton(onPressed: ()async{
+            await c.saveItemsToDB();
+            Get.back();
+          }, icon: Icon(Icons.check_sharp,size: 35,))
+        ],
       ),
-    );
+    ));
   }
 
   InputDecoration _inputDecoration(String label) {

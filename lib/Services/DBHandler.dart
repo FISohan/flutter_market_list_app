@@ -23,11 +23,11 @@ class DbHandler {
     return queryResult.map((e) => ItemModel.fromMap(e)).toList();
   }
 
-  Future<int> insertList(ItemModel list) async {
+  Future<int> insertData(ItemModel data) async {
     Database db = await initDB();
-    print('map>>${list.toMap()}');
+    print('map>>${data.toMap()}');
     int res = 0;
-    res = await db.insert('marketList', list.toMap(),
+    res = await db.insert('marketList', data.toMap(),
         conflictAlgorithm: ConflictAlgorithm.replace);
     return res;
   }

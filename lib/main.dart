@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:market_list/Pages/AddItemPage.dart';
+import 'package:market_list/Services/HomePageService.dart';
 import 'package:market_list/Services/TabService.dart';
 
 import 'Pages/ArchivePage.dart';
@@ -11,10 +12,17 @@ main() {
 }
 
 class MyApp extends StatelessWidget {
+  HomePageService _homePageService = Get.put(HomePageService());
   final _tabs = [HomePage(),ArchivePage()];
   @override
   Widget build(BuildContext context) {
     return GetMaterialApp(
+        routingCallback: (routing)async{
+          if(routing!.current == '/'){
+           await _homePageService.initDataFromDBtoItems();
+            print('????iam in home page');
+          }
+        },
         home: GetBuilder<TabService>(
           init: TabService(),
           builder: (c)=>Scaffold(
