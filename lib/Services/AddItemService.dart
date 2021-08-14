@@ -49,7 +49,10 @@ class AddItemService extends GetxController {
       print(_dbHandler.insertData(item));
     }
   }
-
+  void removeItemFromItems(int index){
+    items.removeAt(index);
+    print('>>$index');
+  }
   @override
   void onInit() async{
     // TODO: implement onInit

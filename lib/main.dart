@@ -17,6 +17,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return GetMaterialApp(
+      debugShowCheckedModeBanner: false,
         routingCallback: (routing)async{
           if(routing!.current == '/'){
            await _homePageService.initDataFromDBtoItems();
@@ -26,15 +27,19 @@ class MyApp extends StatelessWidget {
         home: GetBuilder<TabService>(
           init: TabService(),
           builder: (c)=>Scaffold(
+            backgroundColor: Colors.white60,
             body: _tabs[c.index],
             floatingActionButtonLocation: FloatingActionButtonLocation.miniCenterDocked,
             floatingActionButton: FloatingActionButton(
-              child: Icon(Icons.add),
+              backgroundColor: Colors.blueGrey,
+              child: Icon(Icons.add,),
               onPressed: () {
                 Get.to(AddItemPage());
               },
             ),
             bottomNavigationBar: BottomNavigationBar(
+              backgroundColor: Colors.grey,
+              selectedItemColor: Colors.blueGrey,
               currentIndex: c.index,
               onTap: (i){
                 c.goPage(i);
@@ -45,7 +50,7 @@ class MyApp extends StatelessWidget {
                       Icons.home,
                       size: 30,
                     ),
-                    label: 'HOME${c.index}'),
+                    label: 'HOME'),
                 BottomNavigationBarItem(
                     icon: Icon(
                       Icons.archive,
