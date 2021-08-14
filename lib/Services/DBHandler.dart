@@ -32,7 +32,7 @@ class DbHandler {
     return res;
   }
 
-  Future<void> deleteList(int id) async {
+  Future<void> deleteData(int id) async {
     final db = await initDB();
     await db.delete(
       'marketList',
@@ -41,7 +41,7 @@ class DbHandler {
     );
   }
 
-  Future<void> updateList(ItemModel updatedList) async {
+  Future<void> updateData(ItemModel updatedList) async {
     final db = await initDB();
     await db.update('marketList', updatedList.toMap(),
         where: "id = ?", whereArgs: [updatedList.id]);

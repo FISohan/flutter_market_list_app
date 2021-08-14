@@ -31,6 +31,7 @@ class MyApp extends StatelessWidget {
             body: _tabs[c.index],
             floatingActionButtonLocation: FloatingActionButtonLocation.miniCenterDocked,
             floatingActionButton: FloatingActionButton(
+
               backgroundColor: Colors.blueGrey,
               child: Icon(Icons.add,),
               onPressed: () {

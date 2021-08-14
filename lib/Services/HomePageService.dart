@@ -14,6 +14,22 @@ class HomePageService extends GetxController {
     items.sort((a,b)=>a.groupId.compareTo(b.groupId));
   }
 
+  Future<void> updateDb(ItemModel updatedItem) async{
+      await _dbHandler.updateData(updatedItem);
+      await initDataFromDBtoItems();
+  }
+
+  String totalAmount(int groupId){
+    int total = 0;
+    for(int i = 0;i < items.length;i++){
+      if(items[i].groupId == groupId){
+        total += items[i].amountPerItem;
+      }
+    }
+    print('>>>>$total $groupId');
+    return total.toString();
+  }
+
   @override
   void onInit() async{
     super.onInit();

@@ -34,6 +34,7 @@ class AddItemService extends GetxController {
         itemQuantity: itemQuantity);
     items.add(_item);
   }
+
   int _maxGroupIdFromDB(){
     if(itemsFromDB.length != 0){
       print('${itemsFromDB.last.id}');
