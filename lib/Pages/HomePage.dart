@@ -1,11 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/painting.dart';
 import 'package:get/get.dart';
+import 'package:get/get_navigation/get_navigation.dart';
 import 'package:market_list/Models/ItemModel.dart';
 import 'package:market_list/Services/HomePageService.dart';
+import 'package:market_list/Services/TabService.dart';
 
 class HomePage extends StatelessWidget {
-  HomePageService _homePageService = Get.put(HomePageService());
+  final HomePageService _homePageService = Get.put(HomePageService());
+
   @override
   Widget build(BuildContext context) {
     return GetX<HomePageService>(
@@ -14,7 +17,8 @@ class HomePage extends StatelessWidget {
               child: ListView(
                 children: (c.items.length == 0)
                     ? [
-                        Center(
+                        Container(
+                          alignment: Alignment.center,
                           child: Text('No data'),
                         )
                       ]
@@ -34,37 +38,29 @@ class HomePage extends StatelessWidget {
     for (int i = 0; i < itemListLength; i++) {
       if (groupId != itemList[i].groupId) {
         groupId = itemList[i].groupId;
-        children.add(_listViewChidrenContainer(containerListChildren));
+        children.add(_listViewChildrenContainer(containerListChildren));
 
         containerListChildren.add(Column(
           children: [
             Text(
-                'Total:${_homePageService.totalAmount(itemList![i].groupId - 1)}'),
-            OutlinedButton(
-                onPressed: () {},
-                child: Text(
-                  'Complete',
-                  style: TextStyle(color: Colors.black),
-                ))
+              'Total:${_homePageService.totalAmount(itemList[i].groupId - 1)}',
+              style: TextStyle(fontSize: 20),
+            ),
           ],
         ));
         containerListChildren = [];
       }
 
-      containerListChildren.add(_listViewChidrenContainerRow(itemList, i));
+      containerListChildren.add(_listViewChildrenContainerRow(itemList, i));
 
       if (i == itemListLength - 1) {
-        children.add(_listViewChidrenContainer(containerListChildren));
+        children.add(_listViewChildrenContainer(containerListChildren));
         containerListChildren.add(Column(
           children: [
             Text(
-                'Total:${_homePageService.totalAmount(itemList.last.groupId)}'),
-            OutlinedButton(
-                onPressed: () {},
-                child: Text(
-                  'Complete',
-                  style: TextStyle(color: Colors.black),
-                ))
+              'Total:${_homePageService.totalAmount(itemList.last.groupId)}',
+              style: TextStyle(fontSize: 20),
+            ),
           ],
         ));
         containerListChildren = [];
@@ -73,7 +69,7 @@ class HomePage extends StatelessWidget {
     return children;
   }
 
-  Row _listViewChidrenContainerRow(List<ItemModel> itemList, int i) {
+  Row _listViewChildrenContainerRow(List<ItemModel> itemList, int i) {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceAround,
       children: [
@@ -87,10 +83,33 @@ class HomePage extends StatelessWidget {
                   amountPerItem: itemList[i].amountPerItem,
                   itemName: itemList[i].itemName,
                   itemQuantity: itemList[i].itemQuantity);
+              if (_homePageService.checkIsSorted(itemList[i].groupId)) {
+                Get.snackbar('', 'Your Item Appear in Archive',
+                    snackPosition: SnackPosition.TOP,
+                    mainButton:
+                        TextButton(onPressed: () {
+                          Get.put(TabService()).goPage(1);
+                        }, child: Text('Go archive')),
+                    duration: Duration(milliseconds: 1500));
+              }
               await _homePageService.updateDb(updatedItem);
             }),
-        Text('${itemList[i].itemName}'),
-        Text('${itemList[i].itemQuantity}'),
+        Text('${itemList[i].itemName}',
+            style: (itemList[i].isDone == 1)
+                ? TextStyle(
+                    decoration: TextDecoration.lineThrough,
+                    decorationColor: Colors.red,
+                    decorationThickness: 3,
+                  )
+                : TextStyle()),
+        Text('${itemList[i].itemQuantity}',
+            style: (itemList[i].isDone == 1)
+                ? TextStyle(
+                    decoration: TextDecoration.lineThrough,
+                    decorationColor: Colors.red,
+                    decorationThickness: 3,
+                  )
+                : TextStyle()),
         SizedBox(
             width: (Get.width / 3) - 35,
             height: 35,
@@ -106,6 +125,9 @@ class HomePage extends StatelessWidget {
                   await _homePageService.updateDb(updatedItem);
                 },
                 keyboardType: TextInputType.number,
+                initialValue: (itemList[i].amountPerItem == 0)
+                    ? ''
+                    : '${itemList[i].amountPerItem}',
                 decoration: InputDecoration(
                   labelText: 'Amount',
                   enabledBorder: OutlineInputBorder(
@@ -118,7 +140,7 @@ class HomePage extends StatelessWidget {
     );
   }
 
-  Padding _listViewChidrenContainer(List<Widget> containerListChildren) {
+  Padding _listViewChildrenContainer(List<Widget> containerListChildren) {
     return Padding(
       padding: const EdgeInsets.all(8.0),
       child: Container(

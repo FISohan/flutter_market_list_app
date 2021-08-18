@@ -12,28 +12,29 @@ main() {
 }
 
 class MyApp extends StatelessWidget {
-  HomePageService _homePageService = Get.put(HomePageService());
-  final _tabs = [HomePage(),ArchivePage()];
+  final HomePageService _homePageService = Get.put(HomePageService());
+  final _tabs = [HomePage(), ArchivePage()];
   @override
   Widget build(BuildContext context) {
     return GetMaterialApp(
-      debugShowCheckedModeBanner: false,
-        routingCallback: (routing)async{
-          if(routing!.current == '/'){
-           await _homePageService.initDataFromDBtoItems();
-            print('????iam in home page');
+        debugShowCheckedModeBanner: false,
+        routingCallback: (routing) async {
+          if (routing!.current == '/') {
+            await _homePageService.initDataFromDBtoItems();
           }
         },
         home: GetBuilder<TabService>(
           init: TabService(),
-          builder: (c)=>Scaffold(
+          builder: (c) => Scaffold(
             backgroundColor: Colors.white60,
             body: _tabs[c.index],
-            floatingActionButtonLocation: FloatingActionButtonLocation.miniCenterDocked,
+            floatingActionButtonLocation:
+                FloatingActionButtonLocation.miniCenterDocked,
             floatingActionButton: FloatingActionButton(
-
               backgroundColor: Colors.blueGrey,
-              child: Icon(Icons.add,),
+              child: Icon(
+                Icons.add,
+              ),
               onPressed: () {
                 Get.to(AddItemPage());
               },
@@ -42,7 +43,7 @@ class MyApp extends StatelessWidget {
               backgroundColor: Colors.grey,
               selectedItemColor: Colors.blueGrey,
               currentIndex: c.index,
-              onTap: (i){
+              onTap: (i) {
                 c.goPage(i);
               },
               items: [
@@ -61,8 +62,6 @@ class MyApp extends StatelessWidget {
               ],
             ),
           ),
-        )
-    );
-
+        ));
   }
 }

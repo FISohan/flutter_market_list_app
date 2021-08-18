@@ -6,7 +6,7 @@ import 'package:path/path.dart';
 class DbHandler {
   //initialize DataBase
   Future<Database> initDB() async {
-    final String path = await getDatabasesPath();
+    final path = await getDatabasesPath();
     return openDatabase(
       join(path, 'marketList.db'),
       onCreate: (database, version) async {
