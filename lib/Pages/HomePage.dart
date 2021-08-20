@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/painting.dart';
+
 import 'package:get/get.dart';
 import 'package:get/get_navigation/get_navigation.dart';
+
 import 'package:market_list/Models/ItemModel.dart';
+import 'package:market_list/Pages/AddItemPage.dart';
 import 'package:market_list/Services/HomePageService.dart';
 import 'package:market_list/Services/TabService.dart';
 
@@ -14,16 +17,40 @@ class HomePage extends StatelessWidget {
     return GetX<HomePageService>(
         init: HomePageService(),
         builder: (c) => Container(
-              child: ListView(
-                children: (c.items.length == 0)
-                    ? [
-                        Container(
-                          alignment: Alignment.center,
-                          child: Text('No data'),
-                        )
-                      ]
-                    : _listViewChildren(c.items),
-              ),
+              child: (c.items.length == 0)
+                  ? Center(
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Text(
+                            'No Current item found',
+                            style: TextStyle(
+                              fontSize: 30,
+                              color: Colors.redAccent
+                            ),
+                          ),
+                          RichText(
+                              textAlign: TextAlign.center,
+                              text: TextSpan(
+                                  text: 'This app made by: ',
+                                  children: [
+                                    TextSpan(
+                                        text: 'FI Sohan\n',
+                                        style: TextStyle(
+                                            color: Colors.blue, fontSize: 20)),
+                                    TextSpan(text: 'fisohan7@gmail.com\n')
+                                  ])),
+                          ElevatedButton(
+                              onPressed: () {
+                                Get.to(AddItemPage());
+                              },
+                              child: Text('ADD'))
+                        ],
+                      ),
+                    )
+                  : ListView(
+                      children: _listViewChildren(c.items),
+                    ),
             ));
   }
 
@@ -55,6 +82,7 @@ class HomePage extends StatelessWidget {
 
       if (i == itemListLength - 1) {
         children.add(_listViewChildrenContainer(containerListChildren));
+        children.add(Padding(padding: EdgeInsets.only(bottom: 20)));
         containerListChildren.add(Column(
           children: [
             Text(
@@ -82,14 +110,16 @@ class HomePage extends StatelessWidget {
                   isDone: (value == true) ? 1 : 0,
                   amountPerItem: itemList[i].amountPerItem,
                   itemName: itemList[i].itemName,
-                  itemQuantity: itemList[i].itemQuantity);
+                  itemQuantity: itemList[i].itemQuantity,
+                  time: itemList[i].time);
               if (_homePageService.checkIsSorted(itemList[i].groupId)) {
                 Get.snackbar('', 'Your Item Appear in Archive',
                     snackPosition: SnackPosition.TOP,
-                    mainButton:
-                        TextButton(onPressed: () {
+                    mainButton: TextButton(
+                        onPressed: () {
                           Get.put(TabService()).goPage(1);
-                        }, child: Text('Go archive')),
+                        },
+                        child: Text('Go archive')),
                     duration: Duration(milliseconds: 1500));
               }
               await _homePageService.updateDb(updatedItem);
@@ -121,7 +151,8 @@ class HomePage extends StatelessWidget {
                       isDone: itemList[i].isDone,
                       amountPerItem: int.parse(value),
                       itemName: itemList[i].itemName,
-                      itemQuantity: itemList[i].itemQuantity);
+                      itemQuantity: itemList[i].itemQuantity,
+                      time: itemList[i].time);
                   await _homePageService.updateDb(updatedItem);
                 },
                 keyboardType: TextInputType.number,

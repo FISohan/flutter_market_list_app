@@ -1,4 +1,3 @@
-import 'dart:math';
 
 import 'package:get/get.dart';
 import 'package:market_list/Models/ItemModel.dart';
@@ -31,7 +30,7 @@ class AddItemService extends GetxController {
         isDone: isDone,
         amountPerItem: amountPerItem,
         itemName: itemName,
-        itemQuantity: itemQuantity);
+        itemQuantity: itemQuantity,time: DateTime.now().toLocal().toString());
     items.add(_item);
   }
 

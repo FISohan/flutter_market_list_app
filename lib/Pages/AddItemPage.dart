@@ -97,6 +97,7 @@ class AddItemPage extends StatelessWidget {
                         } else {
                           _formKey.currentState!.save();
                           c.addItem();
+                          _formKey.currentState!.reset();
                         }
                       },
                       child: Text('Add'),

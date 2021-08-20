@@ -4,6 +4,7 @@ class TabService extends GetxController{
     int index = 0;
     void goPage(int i){
       index = i;
+      print('|||||||||');
       update();
     }
 }

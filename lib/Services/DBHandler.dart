@@ -1,5 +1,4 @@
 import 'package:market_list/Models/ItemModel.dart';
-import 'package:get/get.dart';
 import 'package:sqflite/sqflite.dart';
 import 'package:path/path.dart';
 
@@ -11,7 +10,7 @@ class DbHandler {
       join(path, 'marketList.db'),
       onCreate: (database, version) async {
         await database.execute(
-            "CREATE TABLE marketList(id INTEGER PRIMARY KEY AUTOINCREMENT, groupId INTEGER NOT NULL,isDone INTEGER NOT NULL, amountPerItem INTEGER NOT NULL, itemName TEXT NOT NULL, itemQuantity TEXT NOT NULL)");
+            "CREATE TABLE marketList(id INTEGER PRIMARY KEY AUTOINCREMENT, groupId INTEGER NOT NULL,isDone INTEGER NOT NULL, amountPerItem INTEGER NOT NULL, itemName TEXT NOT NULL, itemQuantity TEXT NOT NULL,time TEXT NOT NULL)");
       },
       version: 1,
     );
@@ -36,7 +35,7 @@ class DbHandler {
     final db = await initDB();
     await db.delete(
       'marketList',
-      where: "id = ?",
+      where: "groupId = ?",
       whereArgs: [id],
     );
   }

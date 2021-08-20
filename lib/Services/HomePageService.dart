@@ -32,7 +32,7 @@ class HomePageService extends GetxController {
     return total.toString();
   }
 
-  checkIsSorted(int id){
+ bool checkIsSorted(int id){
     int a = 0;
     int b = 0;
     for(int i = 0;i<items.length;i++){
@@ -43,7 +43,6 @@ class HomePageService extends GetxController {
         }
       }
     }
-    print('a - b = ${a - b}');
     return a - b == 1;
   }
 

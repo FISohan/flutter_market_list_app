@@ -32,6 +32,7 @@ class MyApp extends StatelessWidget {
                 FloatingActionButtonLocation.miniCenterDocked,
             floatingActionButton: FloatingActionButton(
               backgroundColor: Colors.blueGrey,
+
               child: Icon(
                 Icons.add,
               ),
@@ -43,8 +44,9 @@ class MyApp extends StatelessWidget {
               backgroundColor: Colors.grey,
               selectedItemColor: Colors.blueGrey,
               currentIndex: c.index,
-              onTap: (i) {
+              onTap: (i) async{
                 c.goPage(i);
+                if (i == 0) await _homePageService.initDataFromDBtoItems();
               },
               items: [
                 BottomNavigationBarItem(
